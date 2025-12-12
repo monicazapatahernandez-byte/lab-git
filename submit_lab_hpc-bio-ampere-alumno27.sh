@@ -2,16 +2,19 @@
 #SBATCH --job-name=lab3-cut-alumno27
 #SBATCH --output=slurm-%j.out
 #SBATCH --error=slurm-%j.err
-#SBATCH --ntasks=4
+#SBATCH --partition=hpc-bio-ampere
 #SBATCH --time=01:00:00
+#SBATCH --cpus-per-task=4
 #SBATCH --mem=4G
 
-# Ir al directorio del repositorio
+set -euo pipefail
+
+# Directorio del repositorio
 cd "$HOME/ampere/lab-git" || exit 1
 
 TARGET_DIR="data"
 
-# Comprobar que existen fastq
+# Detectar ficheros FASTQ
 files=( "$TARGET_DIR"/*.fastq "$TARGET_DIR"/*.fastq.gz )
 real_files=()
 for f in "${files[@]}"; do
@@ -24,20 +27,15 @@ if [ "$n" -eq 0 ]; then
     exit 0
 fi
 
-# Calcular reparto en 4 tareas
-chunk=$(( (n + 3) / 4 ))
+echo "Procesando $n ficheros en paralelo con srun..."
 
-for i in 0 1 2 3; do
-    start=$(( i * chunk ))
-    (
-        for j in $(seq $start $((start + chunk - 1))); do
-            [ $j -lt $n ] || break
-            ./file-cut.sh "${real_files[$j]}"
-        done
-    ) &
+# Lanzar un srun por fichero (un proceso exclusivo por archivo)
+for fq in "${real_files[@]}"; do
+    echo "SLURM -> procesando $fq"
+    srun --exclusive -N1 -n1 -c1 bash -lc "./file-cut.sh '$fq'" &
 done
 
 wait
 
-echo "Trabajo SLURM completado."
+echo "Trabajo SLURM completado correctamente."
 
