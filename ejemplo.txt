@@ -1,3 +1,7 @@
 * Este es un archivo de ejemplo.
 *
+* Esta líne no estaba escrita inicialmente.
+*
+* Esta es la copia local.
+
 * Es para el ejercicio extra de lab-git

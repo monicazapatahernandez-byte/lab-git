@@ -1,0 +1,12 @@
+diff --git a/ejemplo.txt b/ejemplo.txt
+index df915d0..d0aa13a 100644
+--- a/ejemplo.txt
++++ b/ejemplo.txt
+@@ -1,3 +1,7 @@
+ * Este es un archivo de ejemplo.
+ *
++* Esta líne no estaba escrita inicialmente.
++*
++* Esta es la copia local.
++
+ * Es para el ejercicio extra de lab-git
