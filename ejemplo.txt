@@ -1,0 +1,3 @@
+* Este es un archivo de ejemplo.
+*
+* Es para el ejercicio extra de lab-git
